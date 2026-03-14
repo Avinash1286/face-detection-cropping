@@ -1,8 +1,15 @@
 # -*- mode: python ; coding: utf-8 -*-
-
+import sys
 
 block_cipher = None
 
+# Use .icns on macOS, .ico on Windows, .png as fallback
+if sys.platform == 'darwin':
+    icon_file = 'public/logo.icns'
+elif sys.platform == 'win32':
+    icon_file = 'public/logo.ico'
+else:
+    icon_file = 'public/logo.png'
 
 a = Analysis(['run.py'],
              pathex=['.'],
@@ -16,8 +23,6 @@ a = Analysis(['run.py'],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
-             win_no_prefer_redirects=False,
-             win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
 pyz = PYZ(a.pure, a.zipped_data,
@@ -32,7 +37,7 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           console=False,
-          icon='public/logo.png')
+          icon=icon_file)
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,

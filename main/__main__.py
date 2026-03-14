@@ -8,6 +8,8 @@ from main.constants import CV2_FILETYPES
 
 import glob
 import os
+import subprocess
+import sys
 from pathlib import Path
 from PIL import Image, ImageOps
 from itertools import compress
@@ -1454,7 +1456,12 @@ class Ui_MainWindow(object):
             face_crop.close()
 
         # Open the output folder after cropping is finished
-        os.startfile(self.output_path)
+        if sys.platform == 'win32':
+            os.startfile(self.output_path)
+        elif sys.platform == 'darwin':
+            subprocess.Popen(['open', self.output_path])
+        else:
+            subprocess.Popen(['xdg-open', self.output_path])
 
     def _on_crop_init_error(self, error_message):
         """Called when FaceCrop initialization fails for batch cropping."""
